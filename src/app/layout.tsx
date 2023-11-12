@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { TRPCProvider } from "~/lib/trpc";
+import { ThemeProvider } from "~/context/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,9 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
-      <body className={inter.className}>{children}</body>
-      {/* </ThemeProvider> */}
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TRPCProvider>{children}</TRPCProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

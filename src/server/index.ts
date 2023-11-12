@@ -1,6 +1,6 @@
 import { CART_ITEMS } from "./dummyData";
 import { cartRouter } from "./routers/cartRouter";
-import { procedure, router } from "./trpc";
+import { router } from "./trpc";
 
 export type CartItemType = (typeof CART_ITEMS)[number];
 

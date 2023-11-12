@@ -11,6 +11,7 @@ export default function Home() {
         <Image
           src={Banner}
           alt="banner"
+          priority
           className="w-full h-[500px] object-cover opacity-60 group-hover:opacity-100 duration-500"
         />
         <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center">
