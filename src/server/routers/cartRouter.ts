@@ -3,8 +3,6 @@ import { z } from "zod";
 
 export const cartRouter = router({
   getCartItems: procedure.query(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     return CART_ITEMS;
   }),
   deleteCartItem: procedure.input(z.string()).mutation(({ input }) => {
