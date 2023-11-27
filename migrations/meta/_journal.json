@@ -8,6 +8,27 @@
       "when": 1701031290725,
       "tag": "0000_hot_misty_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1701089019709,
+      "tag": "0001_absurd_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1701090210932,
+      "tag": "0002_ambitious_wallop",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1701091654513,
+      "tag": "0003_windy_tempest",
+      "breakpoints": true
     }
   ]
 }

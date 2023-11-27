@@ -9,10 +9,11 @@ import { Card } from "~/components/ui/card";
 import { getNameAcronym } from "~/lib/utils";
 import { Plus, ShoppingCart } from "lucide-react";
 import { db } from "~/lib/db";
-import { shoppingCarts } from "~/lib/db/schema";
+import { shoppingCartItems, shoppingCarts, users } from "~/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export function ProductItem(props: {
-  id: number;
+  id: string;
   title: string;
   author: string;
   price: number;
@@ -21,10 +22,6 @@ export function ProductItem(props: {
 }) {
   async function onAddToShoppingCart() {
     "use server";
-    const allUsers = await db
-      .insert(shoppingCarts)
-      .values({ productIds: [props.id] });
-    console.log(allUsers);
   }
 
   return (
