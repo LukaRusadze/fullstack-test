@@ -1,27 +1,33 @@
 import React from "react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Logo } from "./logo";
 import { Cart } from "./cart";
-import {} from "next/navigation";
 import { NavigationBar } from "./navigation-bar";
+import { auth } from "~/lib/auth";
+import { SignInButton } from "./signin-button";
 
-type Props = {
+export async function Header(props: {
   children?: React.ReactNode | React.ReactNode[];
-};
+}) {
+  const session = await auth();
 
-export function Header({ children }: Props) {
   return (
     <>
       <header className="flex px-[5%] py-4 justify-center md:justify-between w-full items-center sticky top-0 z-10 bg-white">
         <Logo />
         <div className="hidden md:flex items-center gap-8">
           <Cart />
-          <Avatar className="hover:cursor-pointer select-none">
-            <AvatarFallback>LR</AvatarFallback>
-          </Avatar>
+          {session?.user ? (
+            <Avatar className="hover:cursor-pointer select-none">
+              <AvatarImage src={session.user.image ?? undefined} />
+              <AvatarFallback>LR</AvatarFallback>
+            </Avatar>
+          ) : (
+            <SignInButton />
+          )}
         </div>
       </header>
-      {children}
+      {props.children}
       <NavigationBar />
     </>
   );

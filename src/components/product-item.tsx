@@ -8,9 +8,6 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { getNameAcronym } from "~/lib/utils";
 import { Plus, ShoppingCart } from "lucide-react";
-import { db } from "~/lib/db";
-import { shoppingCartItems, shoppingCarts, users } from "~/lib/db/schema";
-import { eq } from "drizzle-orm";
 
 export function ProductItem(props: {
   id: string;

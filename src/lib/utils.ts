@@ -9,3 +9,7 @@ export function getNameAcronym(name: string) {
   const [firstName, lastName] = name.split(" ");
   return firstName[0] + lastName[0];
 }
+
+export function capitalizeFirstLetter(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
