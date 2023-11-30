@@ -4,11 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { XIcon } from "lucide-react";
 import { CartItemType } from "~/server";
-import { api } from "~/lib/trpc";
+import { trpc } from "~/lib/trpc";
 
 export function CartItem({ id, image, name, price, quantity }: CartItemType) {
-  const utils = api.client.useUtils();
-  const { mutate } = api.client.cart.deleteCartItem.useMutation();
+  const utils = trpc.useUtils();
+  const { mutate } = trpc.cart.deleteCartItem.useMutation();
 
   async function onDelete() {
     mutate(id, {

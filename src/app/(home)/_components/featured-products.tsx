@@ -1,8 +1,8 @@
 import { ProductItem } from "~/components/product-item";
-import { api } from "~/lib/trpc";
+import { caller } from "~/server";
 
 export async function FeaturedProducts() {
-  const products = await api.server.product.getProducts.query();
+  const products = await caller.product.getProducts();
 
   return (
     <div className="flex flex-col px-[5%]">
