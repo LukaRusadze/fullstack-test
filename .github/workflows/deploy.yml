@@ -45,14 +45,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build Docker image and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: lukarusadze/artitems:latest
-      - name: Deploy
-        uses: digitalocean/app_action@main
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          app_name: artitems-web
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Deploy To DigitalOcean App
+        run: doctl apps create-deployment ${{ secrets.DIGITALOCEAN_APP_ID }} --image lukarusadze/artitems:latest
