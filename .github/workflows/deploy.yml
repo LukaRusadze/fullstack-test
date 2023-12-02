@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+      - name: Install pnpm
+        run: corepack enable
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
       - name: Build
