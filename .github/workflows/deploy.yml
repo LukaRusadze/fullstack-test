@@ -1,4 +1,4 @@
-name: Deply
+name: Deploy
 on:
   push:
     branches:
@@ -56,4 +56,4 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Deploy To DigitalOcean App
-        run: doctl apps create-deployment artitems-web
+        run: doctl apps create-deployment ${{ secrets.DIGITALOCEAN_APP_ID }}
