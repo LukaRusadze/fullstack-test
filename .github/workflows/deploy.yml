@@ -23,6 +23,12 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
+      - name: Create .env file from github secrets
+        run: |
+          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
+          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
       - name: Build
         run: pnpm build
       - name: Login to Docker Hub
