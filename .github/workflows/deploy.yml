@@ -53,5 +53,5 @@ jobs:
       - name: Deploy
         uses: digitalocean/app_action@v1.1.5
         with:
-          app_name: artitems
+          app_name: artitems-web
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
