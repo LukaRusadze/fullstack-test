@@ -56,4 +56,4 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Deploy To DigitalOcean App
-        run: doctl apps create-deployment ${{ secrets.DIGITALOCEAN_APP_ID }} --image lukarusadze/artitems:latest
+        run: doctl apps create-deployment artitems-web --image lukarusadze/artitems:latest
