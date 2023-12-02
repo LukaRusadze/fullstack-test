@@ -1,4 +1,4 @@
-name: Deploy
+name: Build and Deploy
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Restore Next.js cache
+      - name: Restore build cache
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/.next/cache
