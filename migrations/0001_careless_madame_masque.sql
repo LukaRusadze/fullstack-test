@@ -5,7 +5,7 @@
 
  Due to that we don't generate migration automatically and it has to be done manually
 */--> statement-breakpoint
-ALTER TABLE users ADD `shopping_cart_id` integer REFERENCES shopping_carts(id);--> statement-breakpoint
+ALTER TABLE shopping_carts ADD `user_id` text REFERENCES user(id);--> statement-breakpoint
 /*
  SQLite does not support "Creating foreign key on existing column" out of the box, we do not generate automatic migration for that, so it has to be done manually
  Please refer to: https://www.techonthenet.com/sqlite/tables/alter_table.php
@@ -13,4 +13,4 @@ ALTER TABLE users ADD `shopping_cart_id` integer REFERENCES shopping_carts(id);-
 
  Due to that we don't generate migration automatically and it has to be done manually
 */--> statement-breakpoint
-ALTER TABLE `shopping_carts` DROP COLUMN `user_id`;
+ALTER TABLE `user` DROP COLUMN `shopping_cart_id`;

@@ -1,119 +1,146 @@
+import { db } from "~/lib/db";
 import { procedure, router } from "../trpc";
 import { z } from "zod";
+import { eq, sql } from "drizzle-orm";
+import { products, shoppingCartItems, shoppingCarts } from "~/lib/db/schema";
+import { auth } from "~/lib/auth";
+
+type ShoppingCartItem = typeof shoppingCartItems.$inferSelect;
+
+interface ShoppingCart extends ShoppingCartItem {
+  product: typeof products.$inferSelect;
+}
 
 export const cartRouter = router({
-  getCartItems: procedure.query(async () => {
-    return CART_ITEMS;
+  get: procedure.query(async () => {
+    const session = await auth();
+
+    if (!session?.user) {
+      return;
+    }
+
+    const [shoppingCart] = await db
+      .select({
+        id: shoppingCarts.id,
+        userId: shoppingCarts.userId,
+        totalQuantity: sql<number>`sum(${shoppingCartItems.quantity})`,
+        totalPrice: sql<number>`sum(${products.price} * ${shoppingCartItems.quantity})`,
+        shoppingCartItems: sql`JSON_GROUP_ARRAY(JSON_OBJECT(
+          'id', ${shoppingCartItems.id},
+          'productId', ${shoppingCartItems.productId},
+          'quantity', ${shoppingCartItems.quantity},
+          'shoppingCartId', ${shoppingCartItems.shoppingCartId},
+          'product', JSON_OBJECT(
+            'id', ${products.id},
+            'title', ${products.title},
+            'author', ${products.author},
+            'price', ${products.price},
+            'image', ${products.image}
+          )
+        ))`
+          .mapWith(JSON.parse)
+          .as<Prettify<ShoppingCart>[]>("shoppingCartItems"),
+      })
+      .from(shoppingCarts)
+      .innerJoin(
+        shoppingCartItems,
+        eq(shoppingCarts.id, shoppingCartItems.shoppingCartId),
+      )
+      .innerJoin(products, eq(shoppingCartItems.productId, products.id))
+      .where(eq(shoppingCarts.userId, session.user.id));
+
+    if (!shoppingCart) {
+      await db.insert(shoppingCarts).values({ userId: session.user.id });
+      return;
+    }
+
+    return shoppingCart;
   }),
-  deleteCartItem: procedure.input(z.string()).mutation(({ input }) => {
-    CART_ITEMS = CART_ITEMS.filter((item) => item.id !== input);
+  add: procedure.input(z.number()).mutation(async ({ input }) => {
+    const session = await auth();
+
+    if (!session?.user) {
+      return;
+    }
+
+    let shoppingCart = await db.query.shoppingCarts.findFirst({
+      where: eq(shoppingCarts.userId, session.user.id),
+    });
+
+    if (!shoppingCart) {
+      shoppingCart = (
+        await db
+          .insert(shoppingCarts)
+          .values({ userId: session.user.id })
+          .returning()
+      )[0];
+    }
+
+    const itemInCart = await db.query.shoppingCartItems.findFirst({
+      where: eq(shoppingCartItems.productId, Number(input)),
+    });
+
+    if (itemInCart) {
+      await db
+        .update(shoppingCartItems)
+        .set({
+          quantity: itemInCart.quantity + 1,
+        })
+        .where(eq(shoppingCartItems.id, itemInCart.id));
+      return;
+    }
+
+    try {
+      await db.insert(shoppingCartItems).values({
+        productId: input,
+        shoppingCartId: shoppingCart.id,
+        quantity: 1,
+      });
+    } catch (error) {
+      console.warn(error);
+    }
+  }),
+  reduceQuantity: procedure.input(z.number()).mutation(async ({ input }) => {
+    const currentItems = await db.query.shoppingCartItems.findFirst({
+      where: eq(shoppingCartItems.id, input),
+    });
+
+    if (!currentItems) {
+      return;
+    }
+
+    if (currentItems.quantity > 1) {
+      await db
+        .update(shoppingCartItems)
+        .set({
+          quantity: currentItems.quantity - 1,
+        })
+        .where(eq(shoppingCartItems.id, input));
+      return;
+    }
+
+    await db.delete(shoppingCartItems).where(eq(shoppingCartItems.id, input));
+  }),
+  remove: procedure.input(z.number()).mutation(async ({ input }) => {
+    await db.delete(shoppingCartItems).where(eq(shoppingCartItems.id, input));
+  }),
+  clear: procedure.mutation(async () => {
+    const session = await auth();
+
+    if (!session?.user) {
+      return;
+    }
+
+    const shoppingCart = await db.query.shoppingCarts.findFirst({
+      where: eq(shoppingCarts.userId, session.user.id),
+    });
+
+    if (!shoppingCart) {
+      return;
+    }
+
+    await db
+      .delete(shoppingCartItems)
+      .where(eq(shoppingCartItems.shoppingCartId, shoppingCart.id));
   }),
 });
-
-let CART_ITEMS = [
-  {
-    id: "1",
-    name: "Product 1",
-    price: 100,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "2",
-    name: "Product 2",
-    price: 200,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "3",
-    name: "Product 3",
-    price: 300,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "4",
-    name: "Product 4",
-    price: 400,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "5",
-    name: "Product 5",
-    price: 500,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "6",
-    name: "Product 6",
-    price: 600,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "7",
-    name: "Product 7",
-    price: 700,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "8",
-    name: "Product 8",
-    price: 800,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "9",
-    name: "Product 9",
-    price: 900,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "10",
-    name: "Product 10",
-    price: 1000,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "11",
-    name: "Product 11",
-    price: 1100,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "12",
-    name: "Product 12",
-    price: 1200,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "13",
-    name: "Product 13",
-    price: 1300,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "14",
-    name: "Product 14",
-    price: 1400,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-  {
-    id: "15",
-    name: "Product 15",
-    price: 1500,
-    quantity: 1,
-    image: "https://picsum.photos/200",
-  },
-];

@@ -3,7 +3,7 @@ import { caller } from "~/server";
 import { CartList } from "./cart-list";
 
 export async function Cart() {
-  const cart = await caller.cart.getCartItems();
+  const cart = await caller.cart.get();
 
   return (
     <Popover>

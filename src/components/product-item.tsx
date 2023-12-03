@@ -4,23 +4,18 @@
  */
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { getNameAcronym } from "~/lib/utils";
-import { Plus, ShoppingCart } from "lucide-react";
+import { AddProductItem } from "./add-product-item";
 
 export function ProductItem(props: {
-  id: string;
+  id: number;
   title: string;
   author: string;
   price: number;
   image: string;
-  inCart: boolean;
+  inCart?: boolean;
 }) {
-  async function onAddToShoppingCart() {
-    "use server";
-  }
-
   return (
     <Card className="p-4 md:p-6 rounded-lg shadow-lg w-[250px] bg-white hover:shadow-xl transition-shadow">
       <div className="flex flex-col items-start">
@@ -43,15 +38,7 @@ export function ProductItem(props: {
           <h4 className="text-lg font-semibold text-primary-500">
             ${props.price.toFixed(2)}
           </h4>
-          <form>
-            <Button
-              formAction={onAddToShoppingCart}
-              size="icon"
-              className="absolute right-0 bottom-0"
-            >
-              {props.inCart ? <ShoppingCart /> : <Plus />}
-            </Button>
-          </form>
+          <AddProductItem id={props.id} inCart={props.inCart ?? false} />
         </div>
       </div>
     </Card>
