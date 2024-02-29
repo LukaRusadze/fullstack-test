@@ -1,8 +1,8 @@
 import { ProductItem } from "~/components/product-item";
-import { caller } from "~/server";
+import { api } from "~/server";
 
 export async function FeaturedProducts() {
-  const products = await caller.product.getProducts();
+  const products = await api.product.getAll();
 
   return (
     <div className="flex flex-col px-[5%]">

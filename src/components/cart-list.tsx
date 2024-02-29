@@ -1,14 +1,17 @@
 "use client";
 import { CartItem } from "./cart-item";
 import { For } from "./for";
-import { trpc } from "~/lib/trpc";
 import { PopoverContent, PopoverTrigger } from "./ui/popover";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
-import { ShoppingCartType } from "~/server/routers/types";
+import { useQuery } from "@tanstack/react-query";
+import { CartType } from "~/server/cart";
+import { api } from "~/server";
 
-export function CartList(props: { items?: ShoppingCartType }) {
-  const cart = trpc.cart.get.useQuery(undefined, {
+export function CartList(props: { items: CartType }) {
+  const cart = useQuery({
+    queryFn: () => api.cart.get(),
+    queryKey: ["cart"],
     initialData: props.items,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

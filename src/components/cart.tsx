@@ -1,9 +1,9 @@
 import { Popover } from "./ui/popover";
-import { caller } from "~/server";
 import { CartList } from "./cart-list";
+import { api } from "~/server";
 
 export async function Cart() {
-  const cart = await caller.cart.get();
+  const cart = await api.cart.get();
 
   return (
     <Popover>

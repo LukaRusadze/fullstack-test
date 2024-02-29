@@ -3,19 +3,22 @@
 import React from "react";
 import Image from "next/image";
 import { XIcon } from "lucide-react";
-import { trpc } from "~/lib/trpc";
-import { ShoppingCartType } from "~/server/routers/types";
+import { useMutation } from "@tanstack/react-query";
+import { CartType } from "~/server/cart";
+import { queryClient } from "~/context/query-provider";
+import { api } from "~/server";
 
-type Props = ShoppingCartType["shoppingCartItems"][number];
-
-export function CartItem(props: Props) {
-  const utils = trpc.useUtils();
-  const { mutate } = trpc.cart.reduceQuantity.useMutation();
+export function CartItem(
+  props: Exclude<CartType, undefined>["shoppingCartItems"][number],
+) {
+  const mutation = useMutation({
+    mutationFn: api.cart.reduceQuantity,
+  });
 
   async function onDelete() {
-    mutate(props.id, {
+    mutation.mutate(props.id, {
       onSuccess: () => {
-        utils.cart.get.invalidate();
+        queryClient.invalidateQueries(["cart"]);
       },
     });
   }

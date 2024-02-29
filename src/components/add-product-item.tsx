@@ -1,16 +1,20 @@
 "use client";
 import { Loader2, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
-import { trpc } from "~/lib/trpc";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "~/server";
 
 export function AddProductItem(props: { id: number; inCart: boolean }) {
-  const utils = trpc.useUtils();
-  const mutation = trpc.cart.add.useMutation();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: api.cart.add,
+  });
 
   function onClick() {
     mutation.mutate(props.id, {
       onSuccess() {
-        utils.cart.get.invalidate();
+        queryClient.invalidateQueries(["cart"]);
       },
     });
   }

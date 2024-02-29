@@ -2,11 +2,11 @@ import "./globals.css";
 import "~/lib/env-validator";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { TRPCProvider } from "~/lib/trpc";
 import { ThemeProvider } from "~/context/theme-provider";
 import { getServerSession } from "next-auth";
 import { SessionProvider } from "~/context/session-provider";
 import { Toaster } from "~/components/ui/toaster";
+import { QueryProvider } from "~/context/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,10 +27,10 @@ export default async function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
-            <TRPCProvider>
+            <QueryProvider>
               {children}
               <Toaster />
-            </TRPCProvider>
+            </QueryProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>
