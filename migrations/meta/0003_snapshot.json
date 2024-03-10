@@ -1,6 +1,6 @@
 {
-  "id": "7978a962-c7bb-4d17-95e1-11858fd2bf79",
-  "prevId": "8740ef4e-fc42-4451-a6f1-98dd8d4cf21e",
+  "id": "2f76bfc5-98f7-4431-b8fe-95831d01881f",
+  "prevId": "be237d6d-190b-4ebb-b94f-6db7af3b1c2c",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -108,12 +108,12 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -190,13 +190,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
         "product_id": {
           "name": "product_id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
@@ -208,9 +208,9 @@
         },
         "shopping_cart_id": {
           "name": "shopping_cart_id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -251,7 +251,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },

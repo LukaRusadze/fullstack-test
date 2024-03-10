@@ -1,26 +1,33 @@
 {
   "version": "5",
-  "dialect": "sqlite",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1701562533791,
-      "tag": "0000_adorable_marvel_zombies",
+      "when": 1710035378381,
+      "tag": "0000_reflective_wallow",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1701563514117,
-      "tag": "0001_careless_madame_masque",
+      "when": 1710036459362,
+      "tag": "0001_normal_alex_power",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "5",
-      "when": 1701566390227,
-      "tag": "0002_wooden_edwin_jarvis",
+      "when": 1710036766859,
+      "tag": "0002_cool_blonde_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1710037273796,
+      "tag": "0003_volatile_energizer",
       "breakpoints": true
     }
   ]

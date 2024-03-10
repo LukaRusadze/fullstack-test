@@ -24,21 +24,21 @@ export async function get() {
       userId: shoppingCarts.userId,
       totalQuantity: sql<number>`sum(${shoppingCartItems.quantity})`,
       totalPrice: sql<number>`sum(${products.price} * ${shoppingCartItems.quantity})`,
-      shoppingCartItems: sql`JSON_GROUP_ARRAY(JSON_OBJECT(
+      shoppingCartItems: sql<
+        Prettify<ShoppingCart>[]
+      >`json_agg(json_build_object(
         'id', ${shoppingCartItems.id},
         'productId', ${shoppingCartItems.productId},
         'quantity', ${shoppingCartItems.quantity},
         'shoppingCartId', ${shoppingCartItems.shoppingCartId},
-        'product', JSON_OBJECT(
+        'product', json_build_object(
           'id', ${products.id},
           'title', ${products.title},
           'author', ${products.author},
           'price', ${products.price},
           'image', ${products.image}
         )
-      ))`
-        .mapWith(JSON.parse)
-        .as<Prettify<ShoppingCart>[]>("shoppingCartItems"),
+      ))`.as("shoppingCartItems"),
     })
     .from(shoppingCarts)
     .innerJoin(
@@ -46,11 +46,12 @@ export async function get() {
       eq(shoppingCarts.id, shoppingCartItems.shoppingCartId),
     )
     .innerJoin(products, eq(shoppingCartItems.productId, products.id))
-    .where(eq(shoppingCarts.userId, session.user.id));
+    .where(eq(shoppingCarts.userId, session.user.id))
+    .groupBy(shoppingCarts.id, shoppingCarts.userId);
 
   if (!shoppingCart) {
     await db.insert(shoppingCarts).values({ userId: session.user.id });
-    return;
+    return null;
   }
 
   return shoppingCart;

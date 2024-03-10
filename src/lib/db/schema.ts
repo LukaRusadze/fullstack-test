@@ -2,20 +2,22 @@ import { relations } from "drizzle-orm";
 import {
   integer,
   primaryKey,
-  sqliteTable,
+  pgTable,
   text,
-} from "drizzle-orm/sqlite-core";
+  timestamp,
+  serial,
+} from "drizzle-orm/pg-core";
 import { AdapterAccount } from "next-auth/adapters";
 
-export const users = sqliteTable("user", {
+export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
   email: text("email").notNull(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
 
-export const accounts = sqliteTable(
+export const accounts = pgTable(
   "account",
   {
     userId: text("userId")
@@ -33,12 +35,14 @@ export const accounts = sqliteTable(
     session_state: text("session_state"),
   },
   (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
   }),
 );
 
-export const shoppingCarts = sqliteTable("shopping_carts", {
-  id: integer("id").primaryKey(),
+export const shoppingCarts = pgTable("shopping_carts", {
+  id: serial("id").primaryKey(),
   userId: text("user_id").references(() => users.id),
 });
 
@@ -46,15 +50,13 @@ export const shoppingCartRelations = relations(shoppingCarts, ({ many }) => ({
   shoppingCartItems: many(shoppingCartItems),
 }));
 
-export const shoppingCartItems = sqliteTable("shopping_cart_items", {
-  id: integer("id").primaryKey(),
-  productId: integer("product_id")
+export const shoppingCartItems = pgTable("shopping_cart_items", {
+  id: serial("id").primaryKey(),
+  productId: serial("product_id")
     .notNull()
     .references(() => products.id),
   quantity: integer("quantity").notNull(),
-  shoppingCartId: integer("shopping_cart_id").references(
-    () => shoppingCarts.id,
-  ),
+  shoppingCartId: serial("shopping_cart_id").references(() => shoppingCarts.id),
 });
 
 export const shoppingCartItemsRelations = relations(
@@ -71,30 +73,30 @@ export const shoppingCartItemsRelations = relations(
   }),
 );
 
-export const products = sqliteTable("products", {
-  id: integer("id").primaryKey(),
-  title: text("name").notNull(),
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
   author: text("author").notNull(),
   price: integer("price").notNull(),
   image: text("image").notNull(),
 });
 
-export const sessions = sqliteTable("session", {
+export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-export const verificationTokens = sqliteTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
