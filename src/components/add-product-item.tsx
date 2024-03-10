@@ -1,12 +1,11 @@
 "use client";
 import { Loader2, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "~/server";
+import { queryClient } from "~/context/query-provider";
 
 export function AddProductItem(props: { id: number; inCart: boolean }) {
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: api.cart.add,
   });
