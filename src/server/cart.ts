@@ -15,7 +15,7 @@ export async function get() {
   const session = await auth();
 
   if (!session?.user) {
-    return;
+    return null;
   }
 
   const [shoppingCart] = await db

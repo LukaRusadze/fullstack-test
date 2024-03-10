@@ -9,7 +9,7 @@ import { queryClient } from "~/context/query-provider";
 import { api } from "~/server";
 
 export function CartItem(
-  props: Exclude<CartType, undefined>["shoppingCartItems"][number],
+  props: Exclude<CartType, null>["shoppingCartItems"][number],
 ) {
   const mutation = useMutation({
     mutationFn: api.cart.reduceQuantity,
