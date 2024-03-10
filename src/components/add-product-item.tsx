@@ -14,7 +14,9 @@ export function AddProductItem(props: { id: number; inCart: boolean }) {
   function onClick() {
     mutation.mutate(props.id, {
       onSuccess() {
-        queryClient.invalidateQueries(["cart"]);
+        queryClient.invalidateQueries({
+          queryKey: ["cart"],
+        });
       },
     });
   }
@@ -23,7 +25,7 @@ export function AddProductItem(props: { id: number; inCart: boolean }) {
 
   return (
     <Button onClick={onClick} size="icon" className="absolute right-0 bottom-0">
-      {mutation.isLoading ? <Loader2 className="animate-spin" /> : currentIcon}
+      {mutation.isPending ? <Loader2 className="animate-spin" /> : currentIcon}
     </Button>
   );
 }

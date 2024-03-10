@@ -3,10 +3,10 @@ import "~/lib/env-validator";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/context/theme-provider";
-import { getServerSession } from "next-auth";
 import { SessionProvider } from "~/context/session-provider";
 import { Toaster } from "~/components/ui/toaster";
 import { QueryProvider } from "~/context/query-provider";
+import { auth } from "~/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +20,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
+  const session = await auth();
 
   return (
     <html lang="en" suppressHydrationWarning>

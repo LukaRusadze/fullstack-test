@@ -96,6 +96,7 @@ export async function add(input: number) {
   const session = await auth();
 
   if (!session?.user) {
+    console.log("first");
     return;
   }
 
@@ -110,6 +111,7 @@ export async function add(input: number) {
         .values({ userId: session.user.id })
         .returning()
     )[0];
+    console.log(shoppingCart);
   }
 
   const itemInCart = await db.query.shoppingCartItems.findFirst({

@@ -8,9 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 import { CartType } from "~/server/cart";
 import { api } from "~/server";
 
+function queryFn() {
+  return api.cart.get();
+}
+
 export function CartList(props: { items: CartType }) {
   const cart = useQuery({
-    queryFn: () => api.cart.get(),
+    queryFn,
     queryKey: ["cart"],
     initialData: props.items,
     refetchOnWindowFocus: false,

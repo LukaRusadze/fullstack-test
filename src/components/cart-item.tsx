@@ -18,7 +18,9 @@ export function CartItem(
   async function onDelete() {
     mutation.mutate(props.id, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["cart"]);
+        queryClient.invalidateQueries({
+          queryKey: ["cart"],
+        });
       },
     });
   }

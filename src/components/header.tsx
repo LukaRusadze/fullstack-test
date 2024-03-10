@@ -3,8 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Logo } from "./logo";
 import { Cart } from "./cart";
 import { NavigationBar } from "./navigation-bar";
-import { auth } from "~/lib/auth";
 import { SignInButton } from "./signin-button";
+import { auth } from "~/lib/auth";
 
 export async function Header(props: {
   children?: React.ReactNode | React.ReactNode[];
